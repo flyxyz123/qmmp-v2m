@@ -4,3 +4,6 @@
 *.o
 build*/
 *build*/
+moc_*.cpp
+moc_*.h
+Makefile
