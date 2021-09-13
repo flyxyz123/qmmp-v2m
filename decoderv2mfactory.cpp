@@ -2,7 +2,7 @@
 #include "decoder_v2m.h"
 #include "decoderv2mfactory.h"
 
-#include <QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 bool DecoderV2MFactory::canDecode(QIODevice *) const
 {
