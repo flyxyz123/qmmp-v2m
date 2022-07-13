@@ -1,23 +1,33 @@
+#include "decoderv2mfactory.h"
 #include "v2mhelper.h"
 #include "decoder_v2m.h"
-#include "decoderv2mfactory.h"
+#include "archivereader.h"
 
 #include <QtWidgets/QMessageBox>
 
-bool DecoderV2MFactory::canDecode(QIODevice *) const
+bool DecoderV2MFactory::canDecode(QIODevice *input) const
 {
-    return false;
+    QFile *file = static_cast<QFile*>(input);
+    if(!file)
+    {
+        return false;
+    }
+
+    V2MHelper helper(file->fileName());
+    return helper.initialize();
 }
 
 DecoderProperties DecoderV2MFactory::properties() const
 {
     DecoderProperties properties;
-    properties.name = "V2M Plugin";
+    properties.name = tr("V2M Plugin");
     properties.shortName = "v2m";
     properties.filters << "*.v2m";
+    properties.filters << ArchiveReader::filters();
     properties.description = "V2 Module Player File";
     properties.protocols << "file";
     properties.noInput = true;
+    properties.hasAbout = true;
     return properties;
 }
 
@@ -30,7 +40,6 @@ Decoder *DecoderV2MFactory::create(const QString &path, QIODevice *input)
 QList<TrackInfo*> DecoderV2MFactory::createPlayList(const QString &path, TrackInfo::Parts parts, QStringList *)
 {
     TrackInfo *info = new TrackInfo(path);
-
     if(parts == TrackInfo::Parts())
     {
         return QList<TrackInfo*>() << info;
@@ -48,11 +57,10 @@ QList<TrackInfo*> DecoderV2MFactory::createPlayList(const QString &path, TrackIn
         info->setValue(Qmmp::BITRATE, helper.bitrate());
         info->setValue(Qmmp::SAMPLERATE, helper.sampleRate());
         info->setValue(Qmmp::CHANNELS, helper.channels());
-        info->setValue(Qmmp::BITS_PER_SAMPLE, helper.bitsPerSample());
-        info->setValue(Qmmp::FORMAT_NAME, "V2M");
+        info->setValue(Qmmp::BITS_PER_SAMPLE, helper.depth());
+        info->setValue(Qmmp::FORMAT_NAME, "V2 Module");
         info->setDuration(helper.totalTime());
     }
-
     return QList<TrackInfo*>() << info;
 }
 
@@ -70,9 +78,9 @@ void DecoderV2MFactory::showSettings(QWidget *parent)
 
 void DecoderV2MFactory::showAbout(QWidget *parent)
 {
-    QMessageBox::about (parent, tr("About V2M Reader Plugin"),
-                        tr("Qmmp V2M Reader Plugin")+"\n"+
-                        tr("Written by: Greedysky <greedysky@163.com>"));
+    QMessageBox::about(parent, tr("About V2M Reader Plugin"),
+                       tr("Qmmp V2M Reader Plugin") + "\n" +
+                       tr("Written by: Greedysky <greedysky@163.com>"));
 }
 
 QString DecoderV2MFactory::translation() const

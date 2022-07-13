@@ -1,6 +1,6 @@
-/* =================================================
+/***************************************************************************
  * This file is part of the TTK qmmp plugin project
- * Copyright (C) 2015 - 2021 Greedysky Studio
+ * Copyright (C) 2015 - 2022 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,13 @@
 
  * You should have received a copy of the GNU General Public License along
  * with this program; If not, see <http://www.gnu.org/licenses/>.
- ================================================= */
+ ***************************************************************************/
 
 #ifndef V2MHELPER_H
 #define V2MHELPER_H
 
 #include <QFile>
 #include <libv2m/v2mplayer.h>
-
-typedef struct {
-    uint8_t *tune;
-    int bitrate;
-    V2MPlayer *input;
-} decode_info;
 
 /*!
  * @author Greedysky <greedysky@163.com>
@@ -38,21 +32,22 @@ public:
     ~V2MHelper();
 
     void deinit();
-
     bool initialize();
-    qint64 totalTime() const;
-    void seek(qint64 time);
 
-    int bitrate() const;
-    int sampleRate() const;
-    int channels() const;
-    int bitsPerSample() const;
+    inline void seek(qint64 time) { m_input->Play(time); }
+    inline qint64 totalTime() const { return m_input->Length() * 1000; }
+
+    inline int bitrate() const { return 8; }
+    inline int sampleRate() const { return 44100; }
+    inline int channels() const { return 2; }
+    inline int depth() const { return 32; }
 
     qint64 read(unsigned char *data, qint64 maxSize);
 
 private:
     QString m_path;
-    decode_info *m_info = nullptr;
+    uint8_t *m_tune = nullptr;
+    V2MPlayer *m_input = nullptr;
 
 };
 

@@ -1,4 +1,4 @@
-This is a plugin for Qmmp (1.4.0 or greater) which supports V2M file.
+This is a plugin for Qmmp (1.6.0 or greater) which supports V2M file.
 (V2 Module Player File)
 
 The following packages are required, including development headers,
@@ -11,6 +11,7 @@ To build, run Qt5's qmake (often installed as qmake-qt5) and then build
 with make:
 
 $ qmake-qt5
+
 $ make
 
 To install:

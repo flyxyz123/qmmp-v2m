@@ -16,32 +16,20 @@
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef DECODER_V2M_H
-#define DECODER_V2M_H
+#ifndef ARCHIVEREADER_H
+#define ARCHIVEREADER_H
 
-#include <qmmp/decoder.h>
-
-class V2MHelper;
+#include <QFile>
 
 /*!
  * @author Greedysky <greedysky@163.com>
  */
-class DecoderV2M : public Decoder
+namespace ArchiveReader
 {
-public:
-    explicit DecoderV2M(const QString &path);
-    virtual ~DecoderV2M();
-
-    // Standard Decoder API
-    virtual bool initialize() override final;
-    virtual qint64 totalTime() const override final;
-    virtual int bitrate() const override final;
-    virtual qint64 read(unsigned char *data, qint64 maxSize) override final;
-    virtual void seek(qint64 time) override final;
-
-private:
-    V2MHelper *m_helper = nullptr;
-
-};
+    QStringList filters();
+    bool isSupported(const QString &path);
+    QByteArray unpack(const QString &path);
+}
 
 #endif
+
