@@ -7,3 +7,5 @@ build*/
 moc_*.cpp
 moc_*.h
 Makefile
+.qmake.stash
+*.so
